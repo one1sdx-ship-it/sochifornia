@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ===== Дизайн-система Sochifornia — СВЕТЛАЯ ТЕМА ===== */
+    /* Поверхности */
+    --bg: 248 250 250;          /* почти белый с лёгкой бирюзой */
+    --surface: 255 255 255;
+    --surface-2: 241 247 247;
+    --hairline: 224 232 232;
+    /* Текст */
+    --ink: 13 27 30;            /* near-black глубокий сине-зелёный */
+    --body: 51 65 68;
+    --muted: 108 122 125;
+    /* Бренд: природный зелёный (primary), морской голубой (secondary), бирюза (accent) */
+    --primary: 13 148 110;      /* emerald-teal #0D946E */
+    --primary-fg: 255 255 255;
+    --secondary: 14 116 178;    /* ocean blue #0E74B2 */
+    --accent: 20 184 166;       /* turquoise #14B8A6 */
+    /* Доп. акценты */
+    --violet: 124 92 246;       /* #7C5CF6 */
+    --gold: 234 179 8;          /* #EAB308 */
+    /* Статусы */
+    --success: 22 163 74;
+    --warning: 217 119 6;
+    --error: 220 38 38;
+  }
+
+  .dark {
+    /* ===== ТЁМНАЯ ТЕМА ===== */
+    --bg: 8 17 19;              /* deep ocean night */
+    --surface: 16 28 31;
+    --surface-2: 23 38 42;
+    --hairline: 38 54 58;
+    --ink: 240 247 247;
+    --body: 199 212 214;
+    --muted: 138 154 157;
+    --primary: 25 195 152;      /* ярче на тёмном */
+    --primary-fg: 6 20 18;
+    --secondary: 56 162 224;
+    --accent: 45 212 191;
+    --violet: 167 139 250;
+    --gold: 250 204 21;
+    --success: 34 197 94;
+    --warning: 245 158 11;
+    --error: 248 113 113;
+  }
+
+  * {
+    border-color: rgb(var(--hairline));
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: rgb(var(--bg));
+    color: rgb(var(--body));
+    font-feature-settings: "ss01", "cv01";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: rgb(var(--primary) / 0.2);
+  }
+
+  /* Уважение к prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .container-content {
+    @apply mx-auto w-full max-w-content px-5 sm:px-8;
+  }
+  .container-wide {
+    @apply mx-auto w-full max-w-wide px-5 sm:px-8;
+  }
+  /* Скелетон-заглушка изображений */
+  .skeleton {
+    @apply relative overflow-hidden bg-surface-2;
+  }
+  .skeleton::after {
+    @apply absolute inset-0;
+    content: "";
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgb(var(--ink) / 0.04),
+      transparent
+    );
+    transform: translateX(-100%);
+    animation: shimmer 1.6s infinite;
+  }
+}
+
+/* Скрыть скроллбар у горизонтальных каруселей */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

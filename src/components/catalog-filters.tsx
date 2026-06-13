@@ -1,0 +1,224 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import { SlidersHorizontal, X } from "lucide-react";
+import type { Tour, TourCategory } from "@/data/types";
+import { categories } from "@/data/types";
+import { TourCard } from "@/components/tour-card";
+import { cn, formatPrice } from "@/lib/utils";
+
+type SortKey = "popular" | "price-asc" | "price-desc";
+
+const formats = [
+  { id: "all", label: "Все" },
+  { id: "group", label: "Групповые" },
+  { id: "individual", label: "Индивидуальные" },
+] as const;
+
+const timeSlots = [
+  { id: "all", label: "Любое" },
+  { id: "morning", label: "Утро (до 12:00)" },
+  { id: "day", label: "День (12:00–17:00)" },
+  { id: "evening", label: "Вечер (после 17:00)" },
+] as const;
+
+function timeBucket(start: string): "morning" | "day" | "evening" | "any" {
+  const h = parseInt(start.slice(0, 2), 10);
+  if (Number.isNaN(h)) return "any";
+  if (h < 12) return "morning";
+  if (h < 17) return "day";
+  return "evening";
+}
+
+export function CatalogFilters({
+  tours,
+  initialCategory,
+}: {
+  tours: Tour[];
+  initialCategory?: TourCategory;
+}) {
+  const [category, setCategory] = useState<TourCategory | "all">(initialCategory ?? "all");
+  const [format, setFormat] = useState<(typeof formats)[number]["id"]>("all");
+  const [time, setTime] = useState<(typeof timeSlots)[number]["id"]>("all");
+  const [maxPrice, setMaxPrice] = useState(5000);
+  const [sort, setSort] = useState<SortKey>("popular");
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const filtered = useMemo(() => {
+    let list = tours.filter((t) => {
+      if (category !== "all" && t.category !== category) return false;
+      if (format !== "all" && t.format !== format) return false;
+      if (time !== "all" && timeBucket(t.startTime) !== time) return false;
+      if (t.price > maxPrice) return false;
+      return true;
+    });
+    if (sort === "price-asc") list = [...list].sort((a, b) => a.price - b.price);
+    else if (sort === "price-desc") list = [...list].sort((a, b) => b.price - a.price);
+    else list = [...list].sort((a, b) => b.reviewsCount - a.reviewsCount);
+    return list;
+  }, [tours, category, format, time, maxPrice, sort]);
+
+  const reset = () => {
+    setCategory("all");
+    setFormat("all");
+    setTime("all");
+    setMaxPrice(5000);
+    setSort("popular");
+  };
+
+  const filtersPanel = (
+    <div className="space-y-7">
+      <FilterGroup label="Категория">
+        <Chip active={category === "all"} onClick={() => setCategory("all")}>Все</Chip>
+        {categories.map((c) => (
+          <Chip key={c.id} active={category === c.id} onClick={() => setCategory(c.id)}>
+            {c.label}
+          </Chip>
+        ))}
+      </FilterGroup>
+
+      <FilterGroup label="Тип экскурсии">
+        {formats.map((f) => (
+          <Chip key={f.id} active={format === f.id} onClick={() => setFormat(f.id)}>
+            {f.label}
+          </Chip>
+        ))}
+      </FilterGroup>
+
+      <FilterGroup label="Время начала">
+        {timeSlots.map((t) => (
+          <Chip key={t.id} active={time === t.id} onClick={() => setTime(t.id)}>
+            {t.label}
+          </Chip>
+        ))}
+      </FilterGroup>
+
+      <div>
+        <div className="mb-2 flex items-center justify-between">
+          <span className="text-sm font-semibold text-ink">Цена до</span>
+          <span className="text-sm font-semibold text-primary">{formatPrice(maxPrice)}</span>
+        </div>
+        <input
+          type="range"
+          min={1000}
+          max={5000}
+          step={500}
+          value={maxPrice}
+          onChange={(e) => setMaxPrice(Number(e.target.value))}
+          className="h-2 w-full cursor-pointer appearance-none rounded-full bg-surface-2 accent-primary"
+          aria-label="Максимальная цена"
+        />
+        <div className="mt-1 flex justify-between text-xs text-muted">
+          <span>1 000 ₽</span>
+          <span>5 000 ₽</span>
+        </div>
+      </div>
+
+      <button onClick={reset} className="text-sm font-medium text-primary hover:underline">
+        Сбросить фильтры
+      </button>
+    </div>
+  );
+
+  return (
+    <div className="container-wide grid gap-8 py-12 lg:grid-cols-[280px_1fr]">
+      {/* Десктоп — сайдбар */}
+      <aside className="hidden lg:block">
+        <div className="sticky top-24 rounded-lg border border-hairline bg-surface p-6">
+          {filtersPanel}
+        </div>
+      </aside>
+
+      <div>
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <p className="text-sm text-muted">
+            Найдено: <span className="font-semibold text-ink">{filtered.length}</span>
+          </p>
+          <div className="flex items-center gap-3">
+            <label className="hidden items-center gap-2 text-sm text-muted sm:flex">
+              Сортировка
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value as SortKey)}
+                className="rounded-md border border-hairline bg-surface px-3 py-2 text-sm text-ink outline-none focus:border-primary"
+              >
+                <option value="popular">По популярности</option>
+                <option value="price-asc">Сначала дешевле</option>
+                <option value="price-desc">Сначала дороже</option>
+              </select>
+            </label>
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="inline-flex items-center gap-2 rounded-full border border-hairline bg-surface px-4 py-2 text-sm font-medium text-ink lg:hidden"
+            >
+              <SlidersHorizontal className="h-4 w-4" /> Фильтры
+            </button>
+          </div>
+        </div>
+
+        {filtered.length > 0 ? (
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            {filtered.map((tour) => (
+              <TourCard key={tour.slug} tour={tour} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-lg border border-dashed border-hairline bg-surface p-12 text-center">
+            <p className="text-lg font-semibold text-ink">Ничего не найдено</p>
+            <p className="mt-2 text-body">Попробуйте изменить параметры фильтра.</p>
+            <button onClick={reset} className="mt-4 font-medium text-primary hover:underline">
+              Сбросить фильтры
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Мобильная панель фильтров */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+          <div className="absolute bottom-0 left-0 right-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-bg p-6 pb-10">
+            <div className="mb-6 flex items-center justify-between">
+              <h3 className="font-display text-xl font-bold text-ink">Фильтры</h3>
+              <button onClick={() => setMobileOpen(false)} aria-label="Закрыть" className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-hairline text-ink">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            {filtersPanel}
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="mt-8 h-12 w-full rounded-full bg-primary font-medium text-primary-fg"
+            >
+              Показать {filtered.length}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FilterGroup({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <p className="mb-3 text-sm font-semibold text-ink">{label}</p>
+      <div className="flex flex-wrap gap-2">{children}</div>
+    </div>
+  );
+}
+
+function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors",
+        active
+          ? "border-primary bg-primary text-primary-fg"
+          : "border-hairline bg-surface text-body hover:border-primary/40 hover:text-ink"
+      )}
+    >
+      {children}
+    </button>
+  );
+}
