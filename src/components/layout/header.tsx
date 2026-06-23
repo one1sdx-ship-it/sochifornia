@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, Phone, X } from "lucide-react";
 import { nav, site } from "@/data/site";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -13,7 +14,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => setScrolled(window.scrollY > 0);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -27,13 +28,13 @@ export function Header() {
     <>
     <header
       className={cn(
-        "sticky top-0 z-50 transition-all duration-300",
+        "sticky top-0 z-50 transition-colors duration-300",
         scrolled
           ? "border-b border-hairline bg-bg/80 backdrop-blur-lg"
-          : "bg-transparent"
+          : "border-b border-transparent bg-transparent"
       )}
     >
-      <div className="container-wide flex h-16 items-center justify-between gap-4 sm:h-20">
+      <div className="container-wide flex h-24 items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-2" aria-label={site.name}>
           <Logo />
         </Link>
@@ -101,6 +102,13 @@ export function Header() {
                   {item.label}
                 </Link>
               ))}
+              <Link
+                href="/#gallery"
+                onClick={() => setOpen(false)}
+                className="rounded-lg px-4 py-3 text-lg font-medium text-ink transition-colors hover:bg-surface-2"
+              >
+                Галерея впечатлений
+              </Link>
             </nav>
             <div className="mt-auto space-y-3 pt-6">
               <a href={site.phoneHref} className="flex items-center gap-2 text-lg font-semibold text-ink">
@@ -121,12 +129,14 @@ export function Header() {
 function Logo() {
   return (
     <span className="flex items-center gap-2">
-      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-secondary text-primary-fg">
-        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3 18c2-3 4-3 6 0M21 18c-2-3-4-3-6 0" />
-          <path d="M12 3v10M12 3l5 3M12 3 7 6" />
-        </svg>
-      </span>
+      <Image
+        src="/LogoSochi.png"
+        alt="Sochifornia"
+        width={72}
+        height={72}
+        className="h-[72px] w-[72px] rounded-xl object-contain"
+        priority
+      />
       <span className="font-display text-lg font-bold tracking-tight text-ink">
         Sochifornia
       </span>

@@ -24,7 +24,7 @@ export default function ContactsPage() {
           <div className="space-y-6">
             <ContactItem icon={Phone} title="Телефон" value={site.phone} href={site.phoneHref} />
             <ContactItem icon={MessageCircle} title="WhatsApp" value="Написать в WhatsApp" href={site.whatsapp} />
-            <ContactItem icon={Send} title="Telegram" value="@sochifornia" href={site.telegram} />
+            <ContactItem icon={Send} title="Telegram" value="@sochiforniatravel" href={site.telegram} />
             <ContactItem icon={Mail} title="Email" value={site.email} href={`mailto:${site.email}`} />
             <ContactItem icon={MapPin} title="Адрес" value={site.address} />
             <ContactItem icon={Clock} title="Режим работы" value={site.workingHours} />

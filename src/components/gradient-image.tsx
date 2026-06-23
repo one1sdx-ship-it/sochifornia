@@ -28,13 +28,15 @@ export function GradientImage({
   children?: React.ReactNode;
   label?: string;
 }) {
-  const bg = gradients[id] ?? gradients["grad-sea-1"];
+  // Реальное фото: id — это путь к файлу (например, "/tours/dendrarium.jpg")
+  const isPhoto = id.startsWith("/") || id.startsWith("http");
+  const bg = isPhoto ? `url("${id}")` : gradients[id] ?? gradients["grad-sea-1"];
   return (
     <div
-      className={cn("relative overflow-hidden", className)}
+      className={cn("relative overflow-hidden bg-cover bg-center", className)}
       style={{ backgroundImage: bg }}
       role="img"
-      aria-label={label ?? "Изображение экскурсии (заглушка)"}
+      aria-label={label ?? (isPhoto ? "Изображение экскурсии" : "Изображение экскурсии (заглушка)")}
     >
       {/* мягкое затемнение для читабельности текста поверх */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/10" />

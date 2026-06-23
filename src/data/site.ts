@@ -10,13 +10,13 @@ export const site = {
   phone: "8986-2228-228",
   phoneHref: "tel:+79862228228",
   whatsapp: "https://wa.me/79862228228",
-  telegram: "https://t.me/sochifornia",
+  telegram: "https://t.me/sochiforniatravel",
   workingHours: "Ежедневно с 9:00 до 21:00",
   address: "г. Сочи, ул. Навагинская, 9 (заглушка)",
   email: "info@sochifornia.ru",
   social: {
     vk: "https://vk.com/sochifornia",
-    telegram: "https://t.me/sochifornia",
+    telegram: "https://t.me/sochiforniatravel",
     whatsapp: "https://wa.me/79862228228",
   },
   stats: {

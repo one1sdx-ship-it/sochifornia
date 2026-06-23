@@ -15,7 +15,7 @@
     --body: 51 65 68;
     --muted: 108 122 125;
     /* Бренд: природный зелёный (primary), морской голубой (secondary), бирюза (accent) */
-    --primary: 13 148 110;      /* emerald-teal #0D946E */
+    --primary: 14 165 200;      /* turquoise-blue #0EA5C8 */
     --primary-fg: 255 255 255;
     --secondary: 14 116 178;    /* ocean blue #0E74B2 */
     --accent: 20 184 166;       /* turquoise #14B8A6 */
@@ -37,7 +37,7 @@
     --ink: 240 247 247;
     --body: 199 212 214;
     --muted: 138 154 157;
-    --primary: 25 195 152;      /* ярче на тёмном */
+    --primary: 45 190 225;      /* turquoise-blue, ярче на тёмном */
     --primary-fg: 6 20 18;
     --secondary: 56 162 224;
     --accent: 45 212 191;

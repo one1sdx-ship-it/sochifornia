@@ -19,6 +19,7 @@ export default function ReviewsPage() {
         eyebrow="Отзывы"
         title="Что говорят наши туристы"
         subtitle="Мы гордимся каждым отзывом. Это честные впечатления людей, которые отдыхали с нами."
+        bgImage="/otzivi.jpg"
       />
 
       <section className="container-wide py-section-sm sm:py-section">

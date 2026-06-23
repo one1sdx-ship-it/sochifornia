@@ -35,3 +35,6 @@ next-env.d.ts
 
 # экспорт диалога / временные
 session*.txt
+
+# graphify (служебный граф знаний)
+/graphify-out/

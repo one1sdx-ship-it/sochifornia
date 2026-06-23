@@ -14,7 +14,7 @@ const shots = [
 
 export function GallerySection() {
   return (
-    <section className="bg-surface py-section-sm sm:py-section">
+    <section id="gallery" className="scroll-mt-24 bg-surface py-section-sm sm:py-section">
       <div className="container-wide">
         <SectionHeading
           eyebrow="Галерея впечатлений"

@@ -3,14 +3,14 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowUp, Compass, MessageCircle, Phone, Star, Users } from "lucide-react";
+import { ArrowUp, Compass, Images, MessageCircle, Phone, Star } from "lucide-react";
 import { site } from "@/data/site";
 import { cn } from "@/lib/utils";
 
 const items = [
   { label: "Каталог", href: "/tours", Icon: Compass },
   { label: "Отзывы", href: "/reviews", Icon: Star },
-  { label: "Гиды", href: "/guides", Icon: Users },
+  { label: "Галерея", href: "/#gallery", Icon: Images },
   { label: "Контакты", href: "/contacts", Icon: Phone },
 ];
 

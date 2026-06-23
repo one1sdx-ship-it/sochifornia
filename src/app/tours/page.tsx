@@ -23,6 +23,7 @@ export default async function ToursPage({
         eyebrow="Каталог"
         title="Экскурсии по Сочи и окрестностям"
         subtitle="Подберите идеальный маршрут с помощью фильтров. Все цены окончательные — без скрытых доплат."
+        bgImage="/excursii.png"
       />
       <CatalogFilters tours={tours} initialCategory={category} />
     </>

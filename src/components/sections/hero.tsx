@@ -1,14 +1,21 @@
 import { ChevronRight, Phone, ShieldCheck, Clock, HeartHandshake } from "lucide-react";
 import { site } from "@/data/site";
-import { GradientImage } from "@/components/gradient-image";
 import { Button } from "@/components/ui/button";
 
 export function Hero() {
   return (
     <section className="relative">
-      <div className="absolute inset-0">
-        {/* Заглушка hero-видео: атмосферный градиент. Позже заменить на <video>. */}
-        <GradientImage id="hero" className="h-full w-full" label="Атмосферное видео Сочи (заглушка)" />
+      <div className="absolute inset-0 bg-ink">
+        {/* Главное фото: на мобильных помещается целиком по вертикали (auto 100%),
+            на десктопе — целиком по горизонтали (100% auto). */}
+        <div
+          className="h-full w-full bg-center bg-no-repeat bg-[length:auto_100%] md:bg-bottom md:bg-[length:100%_auto]"
+          style={{ backgroundImage: 'url("/glavnaya.jpg")' }}
+          role="img"
+          aria-label="Сочи"
+        />
+        {/* затемнение для читабельности текста поверх */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/40" />
       </div>
 
       <div className="container-wide relative flex min-h-[92vh] flex-col justify-center py-28 text-white sm:min-h-[88vh]">
