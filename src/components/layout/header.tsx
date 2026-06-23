@@ -24,6 +24,7 @@ export function Header() {
   }, [open]);
 
   return (
+    <>
     <header
       className={cn(
         "sticky top-0 z-50 transition-all duration-300",
@@ -71,8 +72,9 @@ export function Header() {
           </button>
         </div>
       </div>
+    </header>
 
-      {/* Мобильное меню */}
+    {/* Мобильное меню */}
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setOpen(false)} />
@@ -112,7 +114,7 @@ export function Header() {
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }
 
