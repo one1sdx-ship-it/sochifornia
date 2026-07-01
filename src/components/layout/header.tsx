@@ -7,11 +7,22 @@ import { Menu, Phone, X } from "lucide-react";
 import { nav, site } from "@/data/site";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
+import { SCROLL_TOP_EVENT } from "@/components/smooth-scroll";
 import { cn } from "@/lib/utils";
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
+
+  // Закрытие мобильного меню с анимацией «уезжает вправо» (синхронно с slide-out-right)
+  const closeMenu = () => {
+    setClosing(true);
+    setTimeout(() => {
+      setOpen(false);
+      setClosing(false);
+    }, 300);
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 0);
@@ -35,7 +46,12 @@ export function Header() {
       )}
     >
       <div className="container-wide flex h-24 items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-2" aria-label={site.name}>
+        <Link
+          href="/"
+          className="flex items-center gap-2"
+          aria-label={site.name}
+          onClick={() => window.dispatchEvent(new Event(SCROLL_TOP_EVENT))}
+        >
           <Logo />
         </Link>
 
@@ -78,14 +94,25 @@ export function Header() {
     {/* Мобильное меню */}
       {open && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-0 flex h-full w-[82%] max-w-sm flex-col bg-bg p-6 shadow-float animate-[fade-up_0.3s_ease]">
+          <div
+            className={cn(
+              "absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300",
+              closing ? "opacity-0" : "opacity-100"
+            )}
+            onClick={closeMenu}
+          />
+          <div
+            className={cn(
+              "absolute right-0 top-0 flex h-full w-[82%] max-w-sm flex-col bg-bg p-6 shadow-float",
+              closing ? "animate-slide-out-right" : "animate-slide-in-right"
+            )}
+          >
             <div className="flex items-center justify-between">
               <Logo />
               <button
                 type="button"
                 aria-label="Закрыть меню"
-                onClick={() => setOpen(false)}
+                onClick={closeMenu}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-hairline text-ink"
               >
                 <X className="h-5 w-5" />
@@ -96,7 +123,7 @@ export function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  onClick={() => setOpen(false)}
+                  onClick={closeMenu}
                   className="rounded-lg px-4 py-3 text-lg font-medium text-ink transition-colors hover:bg-surface-2"
                 >
                   {item.label}
@@ -104,7 +131,7 @@ export function Header() {
               ))}
               <Link
                 href="/#gallery"
-                onClick={() => setOpen(false)}
+                onClick={closeMenu}
                 className="rounded-lg px-4 py-3 text-lg font-medium text-ink transition-colors hover:bg-surface-2"
               >
                 Галерея впечатлений
@@ -115,7 +142,16 @@ export function Header() {
                 <Phone className="h-5 w-5 text-primary" /> {site.phone}
               </a>
               <p className="text-sm text-muted">{site.workingHours}</p>
-              <Button href="/tours" size="lg" className="w-full" onClick={() => setOpen(false)}>
+              <Button
+                href="/tours"
+                size="lg"
+                className="w-full"
+                onClick={() => {
+                  // меню уезжает вправо, переход в «Каталог» и однократная прокрутка его наверх
+                  closeMenu();
+                  window.dispatchEvent(new Event(SCROLL_TOP_EVENT));
+                }}
+              >
                 Выбрать экскурсию
               </Button>
             </div>
@@ -131,14 +167,14 @@ function Logo() {
     <span className="flex items-center gap-2">
       <Image
         src="/LogoSochi.png"
-        alt="Sochifornia"
+        alt="Sochifornia Travel"
         width={72}
         height={72}
         className="h-[72px] w-[72px] rounded-xl object-contain"
         priority
       />
-      <span className="font-display text-lg font-bold tracking-tight text-ink">
-        Sochifornia
+      <span className="font-display text-[1.2375rem] font-bold tracking-tight text-ink">
+        Sochifornia Travel
       </span>
     </span>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowUp, Compass, Images, MessageCircle, Phone, Star } from "lucide-react";
@@ -17,17 +17,37 @@ const items = [
 export function MobileNav() {
   const pathname = usePathname();
   const [showTop, setShowTop] = useState(false);
+  const [showPhone, setShowPhone] = useState(false);
+  const lastY = useRef(0);
+
+  const onCatalog = pathname === "/tours";
 
   useEffect(() => {
-    const onScroll = () => setShowTop(window.scrollY > 600);
+    lastY.current = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setShowTop(y > 600);
+      if (y < lastY.current - 4) setShowPhone(true); // листают вверх → показать
+      else if (y > lastY.current + 4) setShowPhone(false); // листают вниз → скрыть
+      lastY.current = y;
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // взаимодействие с каруселью фото → показать кнопку телефона
+  useEffect(() => {
+    const onCarousel = () => setShowPhone(true);
+    window.addEventListener("app:carousel", onCarousel);
+    return () => window.removeEventListener("app:carousel", onCarousel);
+  }, []);
+
+  const phoneVisible = onCatalog && showPhone;
+
   return (
     <>
       {/* Плавающие кнопки над нижней навигацией */}
-      <div className="fixed bottom-[84px] left-4 z-40 lg:hidden">
+      <div className="fixed bottom-[164px] left-4 z-40 lg:hidden">
         <button
           type="button"
           aria-label="Наверх"
@@ -46,32 +66,58 @@ export function MobileNav() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Написать в WhatsApp"
-        className="fixed bottom-[84px] right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-success text-white shadow-float lg:bottom-6"
+        className={cn(
+          "fixed right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-success text-white shadow-float transition-all duration-300 lg:bottom-6",
+          phoneVisible ? "bottom-[140px]" : "bottom-[84px]"
+        )}
       >
         <MessageCircle className="h-6 w-6" />
       </a>
 
-      {/* Нижняя навигация (только мобильные) */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-hairline bg-bg/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-lg shadow-nav lg:hidden">
-        <div className="grid grid-cols-4">
-          {items.map(({ label, href, Icon }) => {
-            const active = pathname === href || pathname.startsWith(href + "/");
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={cn(
-                  "flex flex-col items-center gap-1 py-2.5 text-xs font-medium transition-colors",
-                  active ? "text-primary" : "text-muted"
-                )}
-              >
-                <Icon className={cn("h-[22px] w-[22px]", active && "scale-110")} />
-                {label}
-              </Link>
-            );
-          })}
+      {/* Нижний блок: контекстная кнопка телефона (только каталог) + навигация */}
+      <div className="fixed inset-x-0 bottom-0 z-40 lg:hidden">
+        {/* Контекстная кнопка телефона (только каталог): плавно «выдвигается» вверх из-за нижней навигации */}
+        <div
+          className={cn(
+            "grid transition-[grid-template-rows,opacity] duration-300 ease-out",
+            phoneVisible ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+          )}
+        >
+          <div className="overflow-hidden">
+            <a
+              href={site.phoneHref}
+              className={cn(
+                "flex w-full items-center justify-center gap-2 border-t border-hairline bg-primary py-3.5 text-base font-semibold text-primary-fg transition-transform duration-300 ease-out",
+                phoneVisible ? "translate-y-0" : "translate-y-full"
+              )}
+            >
+              <Phone className="h-5 w-5" /> {site.phone}
+            </a>
+          </div>
         </div>
-      </nav>
+
+        {/* Нижняя навигация (только мобильные) */}
+        <nav className="border-t border-hairline bg-bg/90 pb-[env(safe-area-inset-bottom)] shadow-nav backdrop-blur-lg">
+          <div className="grid grid-cols-4">
+            {items.map(({ label, href, Icon }) => {
+              const active = pathname === href || pathname.startsWith(href + "/");
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={cn(
+                    "flex flex-col items-center gap-1 py-2.5 text-xs font-medium transition-colors",
+                    active ? "text-primary" : "text-muted"
+                  )}
+                >
+                  <Icon className={cn("h-[22px] w-[22px]", active && "scale-110")} />
+                  {label}
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
+      </div>
     </>
   );
 }

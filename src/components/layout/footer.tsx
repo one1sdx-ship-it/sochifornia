@@ -96,10 +96,11 @@ function SocialLink({ href, label, children }: { href: string; label: string; ch
 }
 
 function Stat({ value, label }: { value: string; label: string }) {
+  // Стиль как в разделе «О компании»: крупное число цветом primary, подпись — body, по центру
   return (
-    <div>
-      <p className="font-display text-2xl font-bold text-ink">{value}</p>
-      <p className="text-xs text-muted">{label}</p>
+    <div className="text-center">
+      <p className="font-display text-4xl font-bold text-primary">{value}</p>
+      <p className="mt-2 text-sm text-body">{label}</p>
     </div>
   );
 }

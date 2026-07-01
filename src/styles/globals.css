@@ -114,3 +114,31 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Волнообразная «дышащая» пульсация кнопки «Подробнее» (CTA).
+   Магнитуды подобраны деликатно (не +30% — это ломало бы вид), но цикл заметный и живой.
+   Отключается автоматически глобальным правилом prefers-reduced-motion выше. */
+@keyframes cta-breathe {
+  0% {
+    transform: scale(1);
+  }
+  11% {
+    transform: scale(1.08); /* быстрый мягкий подъём (~0.5с) */
+  }
+  55% {
+    transform: scale(0.98); /* долгий спад чуть ниже базы (~2с) */
+  }
+  78% {
+    transform: scale(1.03); /* лёгкий второй подъём (~1с) */
+  }
+  84% {
+    transform: scale(1); /* возврат к базе */
+  }
+  100% {
+    transform: scale(1); /* пауза (~0.7с) → бесшовный цикл */
+  }
+}
+.animate-cta-breathe {
+  animation: cta-breathe 4.5s ease-in-out infinite;
+  will-change: transform;
+}

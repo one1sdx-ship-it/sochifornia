@@ -46,13 +46,13 @@ export function Button({
     const external = href.startsWith("http") || href.startsWith("tel:") || href.startsWith("https://wa.me");
     if (external) {
       return (
-        <a href={href} className={classes} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" {...rest}>
+        <a href={href} className={classes} onClick={onClick} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" {...rest}>
           {children}
         </a>
       );
     }
     return (
-      <Link href={href} className={classes} {...rest}>
+      <Link href={href} className={classes} onClick={onClick} {...rest}>
         {children}
       </Link>
     );

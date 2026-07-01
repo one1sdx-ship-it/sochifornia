@@ -7,7 +7,7 @@ export const site = {
   description:
     "Авторские групповые и индивидуальные экскурсии по Сочи. Надёжно, пунктуально, без скрытых доплат. Оставьте заявку — менеджер перезвонит и подберёт маршрут.",
   url: "https://sochifornia.ru",
-  phone: "8986-2228-228",
+  phone: "+7-986-222-82-28",
   phoneHref: "tel:+79862228228",
   whatsapp: "https://wa.me/79862228228",
   telegram: "https://t.me/sochiforniatravel",
@@ -20,7 +20,7 @@ export const site = {
     whatsapp: "https://wa.me/79862228228",
   },
   stats: {
-    years: "5+",
+    years: "6+",
     clients: "10 000+",
     tours: "20+",
     rating: "4.9",

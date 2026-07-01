@@ -1,4 +1,4 @@
-import { ChevronRight, Phone, ShieldCheck, Clock, HeartHandshake } from "lucide-react";
+import { ChevronRight, ShieldCheck, Clock, HeartHandshake } from "lucide-react";
 import { site } from "@/data/site";
 import { Button } from "@/components/ui/button";
 
@@ -7,9 +7,10 @@ export function Hero() {
     <section className="relative">
       <div className="absolute inset-0 bg-ink">
         {/* Главное фото: на мобильных помещается целиком по вертикали (auto 100%),
+            по горизонтали смещено к 85% (немного отодвинуто от правого края);
             на десктопе — целиком по горизонтали (100% auto). */}
         <div
-          className="h-full w-full bg-center bg-no-repeat bg-[length:auto_100%] md:bg-bottom md:bg-[length:100%_auto]"
+          className="h-full w-full bg-[position:85%_50%] bg-no-repeat bg-[length:auto_100%] md:bg-bottom md:bg-[length:100%_auto]"
           style={{ backgroundImage: 'url("/glavnaya.jpg")' }}
           role="img"
           aria-label="Сочи"
@@ -18,9 +19,9 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/40" />
       </div>
 
-      <div className="container-wide relative flex min-h-[92vh] flex-col justify-center py-28 text-white sm:min-h-[88vh]">
+      <div className="container-wide relative flex min-h-[92vh] flex-col justify-start pb-16 pt-8 text-white sm:min-h-[88vh] sm:pt-10">
         <div className="max-w-3xl animate-fade-up">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-sm font-medium backdrop-blur-sm">
+          <span className="flex w-full items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-sm font-medium backdrop-blur-sm sm:inline-flex sm:w-auto sm:justify-start">
             <span className="h-2 w-2 rounded-full bg-success" />
             {site.stats.years} лет · {site.stats.clients} счастливых туристов
           </span>
@@ -42,9 +43,6 @@ export function Hero() {
             <Button href="/tours" size="lg" className="group">
               Выбрать экскурсию
               <ChevronRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
-            </Button>
-            <Button href={site.phoneHref} size="lg" variant="outline" className="border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20">
-              <Phone className="h-5 w-5" /> {site.phone}
             </Button>
           </div>
 

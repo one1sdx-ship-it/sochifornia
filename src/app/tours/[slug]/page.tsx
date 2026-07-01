@@ -9,8 +9,8 @@ import { reviews, faqs, guides } from "@/data/content";
 import { categories } from "@/data/types";
 import { site } from "@/data/site";
 import { formatPrice } from "@/lib/utils";
-import { GradientImage } from "@/components/gradient-image";
 import { TourGallery } from "@/components/tour-gallery";
+import { TourHeroCarousel } from "@/components/tour-hero-carousel";
 import { LeadForm } from "@/components/lead-form";
 import { ReviewCard } from "@/components/review-card";
 import { FaqAccordion } from "@/components/faq-accordion";
@@ -75,8 +75,7 @@ export default async function TourPage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* HERO */}
-      <section className="relative">
-        <GradientImage id={tour.image} className="absolute inset-0 h-full w-full" label={tour.title} />
+      <TourHeroCarousel image={tour.image} title={tour.title}>
         <div className="container-wide relative flex min-h-[58vh] flex-col justify-end py-12 text-white sm:min-h-[64vh]">
           <nav className="mb-auto pt-4 text-sm text-white/80" aria-label="Хлебные крошки">
             <ol className="flex flex-wrap items-center gap-1.5">
@@ -107,7 +106,7 @@ export default async function TourPage({
             </div>
           </div>
         </div>
-      </section>
+      </TourHeroCarousel>
 
       {/* BODY: контент + липкая колонка заявки */}
       <section className="container-wide grid gap-10 py-12 lg:grid-cols-[1fr_380px] lg:py-16">
@@ -127,7 +126,7 @@ export default async function TourPage({
           {/* Программа */}
           <Reveal as="section">
             <h2 className="font-display text-2xl font-bold text-ink sm:text-3xl">Программа экскурсии</h2>
-            <ol className="mt-6 space-y-6 border-l-2 border-hairline pl-6">
+            <ol className="relative mt-6 space-y-6 pl-[26px] before:absolute before:left-[4px] before:top-0 before:bottom-0 before:w-0.5 before:bg-hairline before:content-['']">
               {tour.program.map((step, i) => (
                 <li key={i} className="relative">
                   <span className="absolute -left-[31px] flex h-5 w-5 items-center justify-center rounded-full border-2 border-primary bg-bg">
@@ -240,7 +239,7 @@ export default async function TourPage({
       <section className="bg-surface py-section-sm">
         <div className="container-wide">
           <h2 className="font-display text-2xl font-bold text-ink sm:text-3xl">Отзывы туристов</h2>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {reviews.slice(0, 3).map((r) => (
               <ReviewCard key={r.name} review={r} />
             ))}

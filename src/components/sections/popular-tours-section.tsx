@@ -18,7 +18,7 @@ export function PopularToursSection() {
           Весь каталог
         </Button>
       </div>
-      <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {popular.map((tour, i) => (
           <Reveal key={tour.slug} delay={(i % 3) * 80}>
             <TourCard tour={tour} />
